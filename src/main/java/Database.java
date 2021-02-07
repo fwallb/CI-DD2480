@@ -38,4 +38,17 @@ public class Database {
     return commitList;
   }
 
+  // Method to extract buildLog based on a commitHash
+  public String getBuildLog(String commitHash) throws SQLException {
+    String result = "No build";
+
+    String getBuildLogQuery = "SELECT buildLog FROM builds WHERE commitHash = " + "'" + commitHash + "'";
+    ResultSet buildLog = this.stmt.executeQuery(getBuildLogQuery);
+
+    while(buildLog.next()) {
+      result = buildLog.getString("buildLog");
+    }
+    return result;
+  }
+
 }
