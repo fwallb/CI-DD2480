@@ -21,4 +21,21 @@ public class Database {
       exep.printStackTrace();
     }
   }
+
+  // Method to extract commit history, commit hash and commit date
+  public ArrayList<String[]> getHistory() throws SQLException {
+    ArrayList<String[]> commitList = new ArrayList<String[]>();
+    String[] commit = new String[2];
+
+    String getHistory = "SELECT commitHash, commitDate FROM builds";
+    ResultSet history = this.stmt.executeQuery(getHistory);
+
+    while(history.next()) {
+      commit[0] = history.getString("commitHash");
+      commit[1] = String.valueOf(history.getInt("commitDate"));
+      commitList.add(commit);
+    }
+    return commitList;
+  }
+
 }
