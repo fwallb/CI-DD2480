@@ -2,5 +2,7 @@ language: java
 services:
 - mysql
 before_install:
+- mysql -e 'CREATE DATABASE IF NOT EXISTS history;'
+- mysql -e 'USE history;'
 - mysql -e 'DROP TABLE IF EXISTS builds;'
 - mysql -e 'CREATE DATABASE IF NOT EXISTS builds;'
