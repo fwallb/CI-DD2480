@@ -13,29 +13,72 @@
     %>
     <head>
         <title>CI-DD2480</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono">
+        <style>
+            *, h1 {
+                margin: 0;
+                padding: 0;
+            }
+            header {
+                font-family: "Permanent Marker", sans-serif;
+                background: #272727;
+                color: #F5F5F5;
+                padding: 25px;
+            }
+            .flex {
+                display: flex;
+                align-items: center;
+                font-family: monospace;
+            }
+            button {
+                margin-left: auto;
+            }
+            .log {
+                background: #272727;
+                color: #F5F5F5;
+                font-family: "Ubuntu Mono", sans-serif;
+                padding: 10px;
+            }
+            .log > p {
+                line-height: 140%;
+                margin: 0;
+            }
+            .hide {
+                display: none;
+            }
+        
+        </style>
     </head>
     <body>
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>date</th>
-                    <th>Build log</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% 
-                    for(String[] build : list) {
-                %>
-                    <tr>
-                        <td><%=build[0]%></td>
-                        <td><%=build[1]%></td>
-                        <td><%=build[2]%></td>
-                    </tr>
-                <%
-                };
-                %>
-            </tbody>
-        </table>
+        <header>
+            <h1>CI-DD2480</h1>
+            <h6>Continuous Integration made fun! XD</h6>
+        </header>
+        <main class="collection">
+            <% 
+                for(String[] build : list) {
+            %>
+                <div class="build collection-item">
+                    <div class="flex">
+                        <%=build[1]%>
+                        Commit-ID: <%=build[0]%>
+                        <button class="btn waves-effect waves-light" onClick="toggleBuildLog(this)">View build log</button>
+                    </div>
+                    <div class="log hide">
+                        <p><%=build[2]%></p>
+                    </div>
+                </div>
+            <%
+            };
+            %>
+        </main>
+        <script>
+            function toggleBuildLog(button) {
+                button.parentNode.nextSibling.nextSibling.classList.toggle('hide');
+                button.innerHTML = (button.innerHTML === 'View build log')? 'Hide build log': 'View build log';
+            }
+        </script>
     </body>
 </html>
