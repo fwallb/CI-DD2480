@@ -61,9 +61,10 @@
                 for(String[] build : list) {
             %>
                 <div class="build collection-item">
-                    <div class="flex">
-                        <%=build[1]%>
-                        Commit-ID: <%=build[0]%>
+                    <div class="flex" id="#<%=build[0]%>">
+                        <p><%=build[1]%></p>
+                        &nbsp
+                        <p>Commit-ID: <span><%=build[0]%></span></p>
                         <button class="btn waves-effect waves-light" onClick="toggleBuildLog(this)">View build log</button>
                     </div>
                     <div class="log hide">
@@ -75,10 +76,45 @@
             %>
         </main>
         <script>
-            function toggleBuildLog(button) {
-                button.parentNode.nextSibling.nextSibling.classList.toggle('hide');
-                button.innerHTML = (button.innerHTML === 'View build log')? 'Hide build log': 'View build log';
+            let expectedHash;
+            function openLog(log){
+                log.classList.remove('hide')
             }
+            function closeLog(log){
+                log.classList.add('hide')
+            }
+            function toggleBuildLog(button) {
+                if(button.innerHTML === 'View build log'){
+                    openLog(button.parentNode.nextElementSibling)
+                    let hash = button.previousElementSibling.lastChild.innerHTML;
+                    expectedHash = hash;
+                    window.location.hash = hash;
+                    button.innerHTML = 'Hide build log';
+                }
+                else {
+                    closeLog(button.parentNode.nextElementSibling)
+                    button.innerHTML = 'View build log';
+                    history.replaceState(null, null, ' ');
+                    expectedHash = "";
+                }
+            }
+
+            function hashChangeHandler() {
+                if(window.location.hash === ('#' + expectedHash))
+                    return;
+                expectedHash = window.location.hash;
+                
+                let build = document.getElementById(window.location.hash);
+                if(build){
+                    let button = build.lastElementChild;
+                    if(button.innerHTML === 'View build log'){
+                        openLog(button.parentNode.nextElementSibling)
+                        button.innerHTML = 'Hide build log';
+                    }
+                }       
+            }
+            window.addEventListener('hashchange', hashChangeHandler);
+            hashChangeHandler();
         </script>
     </body>
 </html>
