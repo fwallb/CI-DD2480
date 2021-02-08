@@ -5,6 +5,7 @@
 
 	<groupId>com.example</groupId>
 	<artifactId>CI-DD2480</artifactId>
+	<packaging>jar</packaging>
 	<version>0.1.0</version>
 
 	<properties>
@@ -31,13 +32,36 @@
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--Jetty dependencies start here -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-		        <version>7.0.2.v20100331</version>
-	        </dependency>
-	</dependencies>
+			<version>9.2.11.v20150529</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>9.2.11.v20150529</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-annotations -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-annotations</artifactId>
+			<version>9.2.11.v20150529</version>
+		</dependency>
+		<!-- Jetty Dependencies end here -->
 
+		<!--Jetty Apache JSP dependency  -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/apache-jsp -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>apache-jsp</artifactId>
+			<version>9.2.11.v20150529</version>
+		</dependency>
+	</dependencies>
+	
 	<build>
         <plugins>
             <plugin>
@@ -63,5 +87,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
