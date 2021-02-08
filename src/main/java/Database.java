@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class Database {
 
-  private Statement stmt;
-  private Connection conn;
+  Statement stmt;
+  Connection conn;
   private final String USER = "root";
   private final String PWD = "";
 
@@ -27,8 +27,8 @@ public class Database {
     ArrayList<String[]> commitList = new ArrayList<String[]>();
     String[] commit = new String[2];
 
-    String getHistory = "SELECT commitHash, commitDate FROM builds";
-    ResultSet history = this.stmt.executeQuery(getHistory);
+    String getHistoryQuery = "SELECT commitHash, commitDate FROM builds";
+    ResultSet history = this.stmt.executeQuery(getHistoryQuery);
 
     while(history.next()) {
       commit[0] = history.getString("commitHash");
