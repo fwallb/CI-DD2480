@@ -5,4 +5,4 @@ before_install:
 - mysql -e 'CREATE DATABASE IF NOT EXISTS history;'
 - mysql -e 'USE history;'
 - mysql -e 'DROP TABLE IF EXISTS builds;'
-- mysql -e 'CREATE DATABASE IF NOT EXISTS builds;'
+- mysql -e 'CREATE TABLE IF NOT EXISTS builds (commitHash VARCHAR(40) UNIQUE, commitDate INT(6), buildLog VARCHAR(800));'
