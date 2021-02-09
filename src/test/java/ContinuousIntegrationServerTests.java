@@ -20,4 +20,15 @@ class ContinuousIntegrationServerTests {
         String result = ContinuousIntegrationServer.cloneAndTest(repoUrl, commitId);
 		assertTrue(result.contains("BUILD SUCCESS"));
 	}
+
+  @Test
+  @DisplayName("Sends sucess-email when build successful")
+  void sendEmailCorrectWhenBuildSuccess() {
+      /*TODO*/
+  }
+  @Test
+  @DisplayName("Sends failure-email when build successful")
+  void sendEmailCorrectWhenBuildFails() {
+      /*TODO*/
+  }
 }
