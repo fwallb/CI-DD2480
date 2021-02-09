@@ -17,6 +17,9 @@ public class Database {
 
         // Create statement object
         this.stmt = conn.createStatement();
+
+        // Create a new table history if it not exists
+        this.stmt.executeUpdate("CREATE TABLE IF NOT EXISTS builds;");
     } catch(SQLException exep) {
       exep.printStackTrace();
     }

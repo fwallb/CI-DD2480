@@ -5,9 +5,6 @@ import java.sql.*;
 import org.dbunit.*;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 class DatabaseTests {
@@ -26,7 +23,7 @@ class DatabaseTests {
     String buildLog = "Test to check if data is extracted correctly";
 
     // Insert data to be extracted
-    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + buildLog + "' )";
+    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + buildLog + "' );";
     db.stmt.executeUpdate(insertData);
 
     // Extract data
@@ -37,7 +34,7 @@ class DatabaseTests {
     assertEquals(commitDate, Integer.parseInt(commitList.get(commitList.size()-1)[1]));
 
     // Remove from table
-    String deleteData = "DELETE FROM builds WHERE commitHash = '" + commitHash + "'";
+    String deleteData = "DELETE FROM builds WHERE commitHash = '" + commitHash + "';";
     db.stmt.executeUpdate(deleteData);
   }
 
@@ -49,7 +46,7 @@ class DatabaseTests {
     String expectedBuildLog = "Test to check if buildLog is extracted correctly";
 
     // Insert data to be extracted
-    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + expectedBuildLog + "' )";
+    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + expectedBuildLog + "' );";
     db.stmt.executeUpdate(insertData);
 
     // Extract data
@@ -59,7 +56,7 @@ class DatabaseTests {
     assertEquals(expectedBuildLog, actualBuildLog);
 
     // Remove from table
-    String deleteData = "DELETE FROM builds WHERE commitHash = '" + commitHash + "'";
+    String deleteData = "DELETE FROM builds WHERE commitHash = '" + commitHash + "';";
     db.stmt.executeUpdate(deleteData);
   }
 }
