@@ -4,9 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>CI-DD2480</artifactId>
-	<packaging>jar</packaging>
-	<version>0.1.0</version>
+	<artifactId>junit5-jupiter-starter-maven</artifactId>
+	<version>1.0-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,50 +32,22 @@
 			<scope>test</scope>
 		</dependency>
 
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20201115</version>
-    </dependency>
-
-
-		<!--Jetty dependencies start here -->
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.2.11.v20150529</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>9.2.11.v20150529</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-annotations -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-annotations</artifactId>
-			<version>9.2.11.v20150529</version>
-		</dependency>
-		<!-- Jetty Dependencies end here -->
+		  <version>7.0.2.v20100331</version>
+	  </dependency>
 
-		<!--Jetty Apache JSP dependency  -->
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/apache-jsp -->
+
+
+
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>apache-jsp</artifactId>
-			<version>9.2.11.v20150529</version>
-		</dependency>
+	     <groupId>org.json</groupId>
+	     <artifactId>json</artifactId>
+	     <version>20201115</version>
+	  </dependency>
 
 	<!--Database dependencies start here-->
-	<!-- https://mvnrepository.com/artifact/org.testcontainers/mysql -->
-		<!-- <dependency>
-				<groupId>org.testcontainers</groupId>
-				<artifactId>jdbc-test</artifactId>
-				<version>1.9.1</version>
-		</dependency> -->
-
 		<!-- https://mvnrepository.com/artifact/org.dbunit/dbunit -->
 		<dependency>
 		    <groupId>org.dbunit</groupId>
@@ -95,36 +66,16 @@
 	</dependencies>
 
 	<build>
-        <plugins>
-            <plugin>
-      				<artifactId>maven-compiler-plugin</artifactId>
-      				<version>3.8.1</version>
-      			</plugin>
-      			<plugin>
-      				<artifactId>maven-surefire-plugin</artifactId>
-      				<version>2.22.2</version>
-      			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ContinuousIntegrationServer</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
