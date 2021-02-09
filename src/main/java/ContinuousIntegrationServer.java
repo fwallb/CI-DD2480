@@ -96,6 +96,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
       // Session session = Session.getDefaultInstance(properties);
 
       Properties properties = new Properties();
+      properties.setProperty("mail.smtp.host", host);
       Session session = Session.getInstance(properties,null);
 
       try{
@@ -133,7 +134,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         System.out.println(target);
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JSONObject requestBodyJson = new JSONObject(requestBody);
+        JSONObject requestBodyJson = new JSONObject(requestBody);//messes up the test cases
         String webhookCommitResult = processWebhookCommit(requestBodyJson);
         sendEmail(requestBodyJson, webhookCommitResult);
 
