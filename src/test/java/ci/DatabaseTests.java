@@ -56,7 +56,7 @@ class DatabaseTests {
 
     // Assert that the data is as expected
     assertEquals(expectedBuildLog, actualBuildLog);
-
+    
     // Remove from table
     String deleteData = "DELETE FROM builds WHERE commitHash = '" + commitHash + "';";
     db.stmt.executeUpdate(deleteData);
