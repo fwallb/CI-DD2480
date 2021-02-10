@@ -84,8 +84,20 @@
       <version>8.0.23</version>
 		</dependency>
 	<!--Database dependencies end here-->
+
+    <!--Mail dependecies-->
+    <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+    <dependency>
+       <groupId>com.sun.mail</groupId>
+       <artifactId>javax.mail</artifactId>
+       <version>1.6.2</version>
+    </dependency>
 	</dependencies>
-	
+
   <build>
     <plugins>
       <plugin>

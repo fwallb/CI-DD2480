@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
+import java.io.*;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -22,6 +23,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
 
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -38,7 +44,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             Process process = Runtime.getRuntime().exec("git clone " + repoUrl + " " + pathToTempDir);
             process.waitFor();
 
-            System.out.println("Running git checkout.");
+            System.out.println("Running git checkout.");//checkout to branch first?
             String[] dummyEnvs = new String[0];
             process = Runtime.getRuntime().exec("git checkout " + commitId, dummyEnvs, new File(pathToTempDir));
             process.waitFor();
@@ -63,8 +69,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
 
-    public static String processWebhookCommit(String requestBody) {
-        JSONObject requestBodyJson = new JSONObject(requestBody);
+    public static String processWebhookCommit(JSONObject requestBodyJson) {
         if (requestBodyJson.has("head_commit")) {
             String headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
             String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
@@ -75,6 +80,63 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         return "";
     }
+
+    /*
+    * Sends email to the author of a commit. Status depends on the results from processWebhookCommit().
+    * @param {JSONObject} requestBodyJson the JSONObject for this commit
+    * @param {String} webhookCommitResult contains output from the tests.
+    */
+    public static boolean sendGmail(JSONObject requestBodyJson, String webhookCommitResult) {
+            if (!(requestBodyJson.has("head_commit"))) {
+              System.out.println("no head_commit");
+              return false;
+            }
+
+            final String username = "group20cidd2480@gmail.com";
+            final String password = "Password1234!";
+
+            Properties prop = new Properties();
+            prop.put("mail.smtp.host", "smtp.gmail.com");
+            prop.put("mail.smtp.port", "587");
+            prop.put("mail.smtp.auth", "true");
+            prop.put("mail.smtp.starttls.enable", "true"); //TLS
+
+            Session session = Session.getInstance(prop,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            try {
+                String headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
+                String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
+                String mailContent = cloneAndTest(repoUrl, headCommitId);
+
+                String recipient = requestBodyJson.getJSONObject("author").getString("email");
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("group20cidd2480@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+                message.setSubject("Status update");
+
+                if(webhookCommitResult.contains("BUILD SUCCESS")){
+                  message.setText("Your latest commit: SUCCESS \n" + mailContent);
+                }else if(webhookCommitResult.contains("BUILD FAIL") || webhookCommitResult.contains("COMPILAITON ERROR")){
+                  message.setText("Your latest commit: FAILURE \n" + mailContent);
+                }else{
+                  message.setText("Something went wrong: No status found.");
+                }
+
+                Transport.send(message);
+                System.out.println("Message sent successfully");
+                return true;
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
 
     public void addToDatabase(String commitId, String buildLog) {
         // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -102,21 +164,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         System.out.println(target);
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        String webhookCommitResult = processWebhookCommit(requestBody);
+        JSONObject requestBodyJson = new JSONObject(requestBody);
+        String webhookCommitResult = processWebhookCommit(requestBodyJson);
+        sendGmail(requestBodyJson, webhookCommitResult);
 
         // Add commitId, date and buildlog to database
-        JSONObject requestBodyJson = new JSONObject(requestBody);
         String headCommitId = "";
         if (requestBodyJson.has("head_commit")) {
             headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
         }
         addToDatabase(headCommitId, webhookCommitResult);
         System.out.println("Added to database.");
-
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
 
         response.getWriter().println("CI job done");
     }
