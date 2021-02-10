@@ -32,7 +32,8 @@
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--Jetty dependencies start here -->
+
+    <!--Jetty dependencies start here -->
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -66,6 +67,23 @@
 			<artifactId>json</artifactId>
 			<version>20201115</version>
 		</dependency>
+
+  <!--Database dependencies start here-->
+		<!-- https://mvnrepository.com/artifact/org.dbunit/dbunit -->
+		<dependency>
+		    <groupId>org.dbunit</groupId>
+		    <artifactId>dbunit</artifactId>
+		    <version>2.7.0</version>
+		    <scope>test</scope>
+		</dependency>
+
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.23</version>
+		</dependency>
+	<!--Database dependencies end here-->
 	</dependencies>
 	
 	<build>
