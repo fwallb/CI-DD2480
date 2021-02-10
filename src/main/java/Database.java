@@ -10,6 +10,7 @@ public class Database {
   private final String PWD = "";
 
   public Database() {
+    
     try {
       // Create a connection with a database
       conn = DriverManager.getConnection(
@@ -52,6 +53,11 @@ public class Database {
       result = buildLog.getString("buildLog");
     }
     return result;
-  }
 
+
+  // Method to insert a row into database
+  public void insertIntoDatabase(String commitHash, int commitDate, String buildLog) throws SQLException {
+    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + buildLog + "' )";
+    this.stmt.executeUpdate(insertData);
+  }
 }
