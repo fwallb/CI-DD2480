@@ -58,7 +58,7 @@ class ContinuousIntegrationServerTests {
     }
     @Test
     void sendEmailTestingFailure(){
-      requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"},\"author\":{\"name\":\"Name\",\"email\":\"test@mail.com\",\"username\":\"UserName\"}}");
+      requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"},\"author\":{\"name\":\"Name\",\"email\":\"sara.damne@gmail.com\",\"username\":\"UserName\"}}");
 
       assertTrue(ContinuousIntegrationServer.sendGmail(requestBodyJson, "BUILD FAILURE"));
     }
