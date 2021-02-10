@@ -12,7 +12,7 @@ public class Database {
   private final String PWD = "";
 
   public Database() {
-    
+
     try {
       // Create a connection with a database
       conn = DriverManager.getConnection(

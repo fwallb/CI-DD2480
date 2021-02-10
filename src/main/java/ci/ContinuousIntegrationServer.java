@@ -104,15 +104,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
         WebAppContext ctx = new WebAppContext();
         ctx.setResourceBase("src/main/webapp");
         ctx.setContextPath("/CI-DD2480");
-         
+
         // Including the JSTL jars for the webapp.
         ctx.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
-     
+
         // Enabling the Annotation based configuration
         org.eclipse.jetty.webapp.Configuration.ClassList classlist = org.eclipse.jetty.webapp.Configuration.ClassList.setServerDefault(server);
         classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", "org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
         classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", "org.eclipse.jetty.annotations.AnnotationConfiguration");
-         
+
         // Setting the handlers and starting the Server
         HandlerCollection handlerCollection = new HandlerCollection();
         handlerCollection.addHandler(ctx); // Important that ctx is added first
