@@ -1,3 +1,8 @@
 *.class
-/target
+target/
 dependency-reduced-pom.xml
+*.jar
+jetty-all-7.0.2.v20100331.jar.1
+json-20201115.jar.1
+ngrok
+ngrok-stable-darwin-386.zip
