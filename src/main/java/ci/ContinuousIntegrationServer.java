@@ -113,7 +113,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
                 String mailContent = cloneAndTest(repoUrl, headCommitId);
 
-                String recipient = requestBodyJson.getJSONObject("author").getString("email");
+                String recipient = requestBodyJson.getJSONObject("head_commit").getJSONObject("committer").getString("email");
 
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress("group20cidd2480@gmail.com"));
