@@ -13,14 +13,11 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.util.stream.Collectors;
-import java.util.Date;
-import java.text.*;
 import org.json.*;
 import java.nio.file.*;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.*;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -76,20 +73,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         return "";
     }
 
-    public void addToDatabase(String commitId, String buildLog) {
-        // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        // Date date = new Date();
-        // date = dateFormat.format(date);
-        int date = 112233;
-
-        try {
-          Database db = new Database();
-          db.insertIntoDatabase(commitId, date, buildLog);
-        } catch(SQLException exep) {
-          exep.printStackTrace();
-        }
-    }
-
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -103,15 +86,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         System.out.println(target);
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         String webhookCommitResult = processWebhookCommit(requestBody);
-
-        // Add commitId, date and buildlog to database
-        JSONObject requestBodyJson = new JSONObject(requestBody);
-        String headCommitId = "";
-        if (requestBodyJson.has("head_commit")) {
-            headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
-        }
-        addToDatabase(headCommitId, webhookCommitResult);
-        System.out.println("Added to database.");
 
         // here you do all the continuous integration tasks
         // for example

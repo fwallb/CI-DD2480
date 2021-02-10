@@ -62,7 +62,6 @@ class DatabaseTests {
     db.stmt.executeUpdate(deleteData);
   }
 
-  @Test
   @DisplayName("Check insertion into database")
   void insertIntoDatabaseCorrect() throws SQLException {
     String commitHash = "0123456789012345678901234567890123456789";
