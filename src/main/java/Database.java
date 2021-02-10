@@ -53,7 +53,7 @@ public class Database {
       result = buildLog.getString("buildLog");
     }
     return result;
-
+  }
 
   // Method to insert a row into database
   public void insertIntoDatabase(String commitHash, int commitDate, String buildLog) throws SQLException {
