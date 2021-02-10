@@ -1,4 +1,7 @@
+package ci;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,17 +33,10 @@ class ContinuousIntegrationServerTests {
     HttpServletResponse response;
     JSONObject requestBodyJson;
 
-    @BeforeEach
-    public void setUp() throws Exception {
-      response.setContentType("text/html;charset=utf-8");
-      response.setStatus(HttpServletResponse.SC_OK);
-      baseRequest.setHandled(true);
-    }
-
     @Test
   	@DisplayName("Check for build success")
   	void checkBuildSuccessForRepo() {
-          requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"}}");
+          requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"},\"author\":{\"name\":\"Name\",\"email\":\"test@mail.com\",\"username\":\"UserName\"}}");
           String result = ContinuousIntegrationServer.processWebhookCommit(requestBodyJson);
   		assertTrue(result.contains("BUILD SUCCESS"));
   	}
@@ -55,13 +51,16 @@ class ContinuousIntegrationServerTests {
   	}
 
     @Test
-    @DisplayName("Sends sucess-email when build successful")
-    void sendEmailCorrectWhenBuildSuccess() {
-        /*TODO*/
+    void sendEmailTestingSuccess(){
+      requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"},\"author\":{\"name\":\"Name\",\"email\":\"test@mail.com\",\"username\":\"UserName\"}}");
+
+      assertTrue(ContinuousIntegrationServer.sendGmail(requestBodyJson, "BUILD SUCCESS"));
     }
     @Test
-    @DisplayName("Sends failure-email when build successful")
-    void sendEmailCorrectWhenBuildFails() {
-        /*TODO*/
+    void sendEmailTestingFailure(){
+      requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\"}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"},\"author\":{\"name\":\"Name\",\"email\":\"test@mail.com\",\"username\":\"UserName\"}}");
+
+      assertTrue(ContinuousIntegrationServer.sendGmail(requestBodyJson, "BUILD FAILURE"));
     }
+
 }

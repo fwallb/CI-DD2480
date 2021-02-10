@@ -1,3 +1,5 @@
+package ci;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
@@ -8,6 +10,8 @@ import java.io.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.util.stream.Collectors;
 import org.json.*;
@@ -37,7 +41,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             Process process = Runtime.getRuntime().exec("git clone " + repoUrl + " " + pathToTempDir);
             process.waitFor();
 
-            System.out.println("Running git checkout.");//måste man checka ut till branch först?
+            System.out.println("Running git checkout.");//checkout to branch first?
             String[] dummyEnvs = new String[0];
             process = Runtime.getRuntime().exec("git checkout " + commitId, dummyEnvs, new File(pathToTempDir));
             process.waitFor();
@@ -63,7 +67,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     public static String processWebhookCommit(JSONObject requestBodyJson) {
-        // JSONObject requestBodyJson = new JSONObject(requestBody);
         if (requestBodyJson.has("head_commit")) {
             String headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
             String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
@@ -75,51 +78,63 @@ public class ContinuousIntegrationServer extends AbstractHandler
         return "";
     }
 
-    //add javadoc
-    public static void sendEmail(JSONObject requestBodyJson, String webhookCommitResult){//use these or create a new one?
-      if (!(requestBodyJson.has("head_commit"))) {
-        System.out.println("no head_commit");
-        return;
-      }
+    /*
+    * Sends email to the author of a commit. Status depends on the results from processWebhookCommit().
+    * @param {JSONObject} requestBodyJson the JSONObject for this commit
+    * @param {String} webhookCommitResult contains output from the tests.
+    */
+    public static boolean sendGmail(JSONObject requestBodyJson, String webhookCommitResult) {
+            if (!(requestBodyJson.has("head_commit"))) {
+              System.out.println("no head_commit");
+              return false;
+            }
 
-      String headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
-      String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
-      String mailContent = cloneAndTest(repoUrl, headCommitId);
+            final String username = "group20cidd2480@gmail.com";
+            final String password = "Password1234!";
 
-      String recipient = "sara.damne@gmail.com";//requestBodyJson.getJSONObject("author").getString("email");
-      String recipientName = requestBodyJson.getJSONObject("author").getString("username");
+            Properties prop = new Properties();
+            prop.put("mail.smtp.host", "smtp.gmail.com");
+            prop.put("mail.smtp.port", "587");
+            prop.put("mail.smtp.auth", "true");
+            prop.put("mail.smtp.starttls.enable", "true"); //TLS
 
-      String host = "localhost";//??
+            Session session = Session.getInstance(prop,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
 
-      // Propterties properties = System.getProperties();
-      // properties.setProperty("mail.smtp.host", host);
-      // Session session = Session.getDefaultInstance(properties);
+            try {
+                String headCommitId = requestBodyJson.getJSONObject("head_commit").getString("id");
+                String repoUrl = requestBodyJson.getJSONObject("repository").getString("clone_url");
+                String mailContent = cloneAndTest(repoUrl, headCommitId);
 
-      Properties properties = new Properties();
-      properties.setProperty("mail.smtp.host", host);
-      Session session = Session.getInstance(properties,null);
+                String recipient = requestBodyJson.getJSONObject("author").getString("email");
 
-      try{
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("sara.damne@gmail.com"));//from who?
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-        message.setSubject("Status update");
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("group20cidd2480@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+                message.setSubject("Status update");
 
-        String currentBranch = "TODO";//requestBodyJson.getString("ref");
-        if(webhookCommitResult.contains("BUILD SUCCESS")){
-          message.setText("Your latest commit status on branch: " + currentBranch + " = Success");//is this enough?
-        }else if(webhookCommitResult.contains("BUILD FAILURE")){//FAILED?
-          message.setText("Your latest commit status on branch: " + currentBranch + " = Failure");
-        }else{
-          System.out.println("Something went wrong!");
+                if(webhookCommitResult.contains("BUILD SUCCESS")){
+                  message.setText("Your latest commit: SUCCESS \n" + mailContent);
+                }else if(webhookCommitResult.contains("BUILD FAIL") || webhookCommitResult.contains("COMPILAITON ERROR")){
+                  message.setText("Your latest commit: FAILURE \n" + mailContent);
+                }else{
+                  message.setText("Something went wrong: No status found.");
+                }
+
+                Transport.send(message);
+                System.out.println("Message sent successfully");
+                // System.out.println(requestBodyJson.toString());
+                return true;
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
-
-        Transport.send(message);
-        System.out.println("Message sent successfully");
-      }catch(MessagingException mex){
-        mex.printStackTrace();
-      }
-    }
 
 
     public void handle(String target,
@@ -136,7 +151,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JSONObject requestBodyJson = new JSONObject(requestBody);//messes up the test cases
         String webhookCommitResult = processWebhookCommit(requestBodyJson);
-        sendEmail(requestBodyJson, webhookCommitResult);
+        sendGmail(requestBodyJson, webhookCommitResult);
 
         response.getWriter().println("CI job done");
     }
@@ -145,7 +160,26 @@ public class ContinuousIntegrationServer extends AbstractHandler
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8080);
-        server.setHandler(new ContinuousIntegrationServer());
+
+        // Creating the WebAppContext for the created content
+        WebAppContext ctx = new WebAppContext();
+        ctx.setResourceBase("src/main/webapp");
+        ctx.setContextPath("/CI-DD2480");
+
+        // Including the JSTL jars for the webapp.
+        ctx.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
+
+        // Enabling the Annotation based configuration
+        org.eclipse.jetty.webapp.Configuration.ClassList classlist = org.eclipse.jetty.webapp.Configuration.ClassList.setServerDefault(server);
+        classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", "org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
+        classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", "org.eclipse.jetty.annotations.AnnotationConfiguration");
+
+        // Setting the handlers and starting the Server
+        HandlerCollection handlerCollection = new HandlerCollection();
+        handlerCollection.addHandler(ctx); // Important that ctx is added first
+        handlerCollection.addHandler(new ContinuousIntegrationServer());
+        server.setHandler(handlerCollection);
+
         server.start();
         server.join();
     }
