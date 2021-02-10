@@ -22,7 +22,9 @@ public class Database {
         this.stmt = conn.createStatement();
 
         // Create a new table history if it not exists
-        this.stmt.executeUpdate("CREATE TABLE IF NOT EXISTS builds;");
+        this.stmt.executeUpdate("USE history");
+
+        this.stmt.executeUpdate("CREATE TABLE IF NOT EXISTS builds (commitHash VARCHAR(40) UNIQUE, commitDate INT(6), buildLog VARCHAR(6000));");
     } catch(SQLException exep) {
       exep.printStackTrace();
     }
@@ -60,7 +62,11 @@ public class Database {
 
   // Method to insert a row into database
   public void insertIntoDatabase(String commitHash, int commitDate, String buildLog) throws SQLException {
-    String insertData = "INSERT INTO builds (commitHash, commitDate, buildLog) VALUES ('" + commitHash + "', '" + commitDate + "', '" + buildLog + "' )";
-    this.stmt.executeUpdate(insertData);
+    String insertData = "INSERT INTO builds VALUES (?, ?, ?)"; //+ commitHash + "', '" + commitDate + "', '" + buildLog + "' )";
+    PreparedStatement prepstmt = conn.prepareStatement(insertData);
+    prepstmt.setString(1, commitHash);
+    prepstmt.setInt(2, commitDate);
+    prepstmt.setString(3, buildLog);
+    prepstmt.execute();
   }
 }

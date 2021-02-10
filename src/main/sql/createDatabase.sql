@@ -14,5 +14,5 @@ USE history;
 CREATE TABLE IF NOT EXISTS builds (
   commitHash VARCHAR(40) UNIQUE,
   commitDate INT(6),
-  buildLog VARCHAR(800)
+  buildLog VARCHAR(6000)
 );
