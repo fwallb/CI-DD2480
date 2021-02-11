@@ -139,10 +139,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
 
     public void addToDatabase(String commitId, String buildLog) {
-        // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        // Date date = new Date();
-        // date = dateFormat.format(date);
-        int date = 112233;
+      DateFormat dateFormat = new SimpleDateFormat("YYMMdd");
+      Date dateDate = new Date();
+      String strDate = dateFormat.format(dateDate);
+      int date = Integer.parseInt(strDate);
 
         try {
           Database db = new Database();
