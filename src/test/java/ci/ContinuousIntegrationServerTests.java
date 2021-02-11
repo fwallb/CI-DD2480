@@ -50,13 +50,16 @@ class ContinuousIntegrationServerTests {
   		assertTrue(result.contains("BUILD SUCCESS"));
   	}
 
+    //Tests for sending email notification
     @Test
+    //If build succeeds
     void sendEmailTestingSuccess(){
       requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\", \"committer\":{\"name\":\"Name\",\"email\":\"sara.damne@gmail.com\",\"username\":\"UserName\"}}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"}}");
 
       assertTrue(ContinuousIntegrationServer.sendGmail(requestBodyJson, "BUILD SUCCESS"));
     }
     @Test
+    //If build fails
     void sendEmailTestingFailure(){
       requestBodyJson = new JSONObject("{\"head_commit\": {\"id\": \"7bb8b28ba9d8ae15c063f784ba72ed606a3d344a\", \"committer\":{\"name\":\"Name\",\"email\":\"sara.damne@gmail.com\",\"username\":\"UserName\"}}, \"repository\": {\"clone_url\": \"https://github.com/MichaelaSahlgren/DD2480.git\"}}");
 
