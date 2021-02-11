@@ -139,15 +139,16 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
 
     public void addToDatabase(String commitId, String buildLog) {
-      DateFormat dateFormat = new SimpleDateFormat("YYMMdd");
-      Date dateDate = new Date();
-      String strDate = dateFormat.format(dateDate);
-      int date = Integer.parseInt(strDate);
+        // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        // Date date = new Date();
+        // date = dateFormat.format(date);
+        int date = 112233;
 
+        try {
           Database db = new Database();
           db.insertIntoDatabase(commitId, date, buildLog);
         } catch(SQLException exep) {
-          exep.printStackTrace().....
+          exep.printStackTrace();
         }
     }
 
@@ -165,7 +166,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JSONObject requestBodyJson = new JSONObject(requestBody);
         String webhookCommitResult = processWebhookCommit(requestBodyJson);
-        sendGmail(requookCommitResult);
+        sendGmail(requestBodyJson, webhookCommitResult);
 
         // Add commitId, date and buildlog to database
         String headCommitId = "";
@@ -186,8 +187,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Creating the WebAppContext for the created content
         WebAppContext ctx = new WebAppContext();
         ctx.setResourceBase("src/main/webapp");
-        ctx.setContextPath("/CI-DD2480")
-        .......
+        ctx.setContextPath("/CI-DD2480");
+
         // Including the JSTL jars for the webapp.
         ctx.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
 
@@ -199,7 +200,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Setting the handlers and starting the Server
         HandlerCollection handlerCollection = new HandlerCollection();
         handlerCollection.addHandler(ctx); // Important that ctx is added first
-        handlerColleHandler(new ContinuousIntegrationServer());
+        handlerCollection.addHandler(new ContinuousIntegrationServer());
         server.setHandler(handlerCollection);
 
         server.start();
