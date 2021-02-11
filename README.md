@@ -10,7 +10,10 @@ cd CI-DD2480
 java -jar target/CI-DD2480-0.1.0.jar
 ```
 
-Testing:
+## Testing:
+Testing has been conducted using Junit tests. The unit tests cover different cases using commitIds that have known results. 
+An example of a test case is to see whether the commit compiles and passes all tests. This uses a known commitId to ensure that the test case always should assertTrue. If it does not the unit test fails and therefore the commit has changed the compilation build.
+These tests are found in ContinuousIntegrationServerTest.java.
 
 
 The database methods are tested by inserting data into the database and thereafter extracting it. Tests assert that the correct data was inserted and extracted, also that the number of rows in the database increased. These tests can be found in DatabaseTests.java.
