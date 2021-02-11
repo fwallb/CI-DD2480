@@ -1,3 +1,5 @@
+Quick test
+
 # DD2480 - Continuous Integration Server
 
 ## How To Use
