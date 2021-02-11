@@ -144,11 +144,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
       String strDate = dateFormat.format(dateDate);
       int date = Integer.parseInt(strDate);
 
-        try {
           Database db = new Database();
           db.insertIntoDatabase(commitId, date, buildLog);
         } catch(SQLException exep) {
-          exep.printStackTrace();
+          exep.printStackTrace().....
         }
     }
 
@@ -166,7 +165,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JSONObject requestBodyJson = new JSONObject(requestBody);
         String webhookCommitResult = processWebhookCommit(requestBodyJson);
-        sendGmail(requestBodyJson, webhookCommitResult);
+        sendGmail(requookCommitResult);
 
         // Add commitId, date and buildlog to database
         String headCommitId = "";
@@ -187,8 +186,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Creating the WebAppContext for the created content
         WebAppContext ctx = new WebAppContext();
         ctx.setResourceBase("src/main/webapp");
-        ctx.setContextPath("/CI-DD2480");
-
+        ctx.setContextPath("/CI-DD2480")
+        .......
         // Including the JSTL jars for the webapp.
         ctx.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
 
@@ -200,7 +199,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // Setting the handlers and starting the Server
         HandlerCollection handlerCollection = new HandlerCollection();
         handlerCollection.addHandler(ctx); // Important that ctx is added first
-        handlerCollection.addHandler(new ContinuousIntegrationServer());
+        handlerColleHandler(new ContinuousIntegrationServer());
         server.setHandler(handlerCollection);
 
         server.start();
