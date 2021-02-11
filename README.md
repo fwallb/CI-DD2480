@@ -14,6 +14,10 @@ Testing:
 
 Database:
 
+## build list URL
+
+http://344bb6ddffb9.ngrok.io/CI-DD2480/
+
 ## Notification
 Notification via email using gmail as the SMTP server. The notification email is sent to the author of a commit.
 This is found in ContinuousIntegrationServer.java. The unit tests are found in ContinuousIntegrationServerTest.java.
