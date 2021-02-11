@@ -21,6 +21,10 @@ The database methods are tested by inserting data into the database and thereaft
 Database:
 A MySQL database is used to store commits between server runs. When the server runs, MySQL must run in the background. Script to create the database, createDatabase.sql, can be found in main/src/sql. Methods to insert and extract data from the database can be found in the database class. Tests of the methods can be found in the database-test file.
 
+## build list URL
+
+http://344bb6ddffb9.ngrok.io/CI-DD2480/
+
 ## Notification
 Notification via email using gmail as the SMTP server. The notification email is sent to the author of a commit.
 This is found in ContinuousIntegrationServer.java. The unit tests are found in ContinuousIntegrationServerTest.java.
