@@ -9,21 +9,22 @@ cd CI-DD2480
 ./mvnw package
 java -jar target/CI-DD2480-0.1.0.jar
 ```
+Database:
+When the server runs, MySQL must run in the background. Script to create the database, createDatabase.sql, can be found in main/src/sql. 
 
 ## Testing:
-Testing has been conducted using Junit tests. The unit tests cover different cases using commitIds that have known results. 
+Testing has been conducted using Junit tests. The unit tests cover different cases using commitIds that have known results.
 An example of a test case is to see whether the commit compiles and passes all tests. This uses a known commitId to ensure that the test case always should assertTrue. If it does not the unit test fails and therefore the commit has changed the compilation build.
 These tests are found in ContinuousIntegrationServerTest.java.
 
-
 The database methods are tested by inserting data into the database and thereafter extracting it. Tests assert that the correct data was inserted and extracted, also that the number of rows in the database increased. These tests can be found in DatabaseTests.java.
-
-Database:
-A MySQL database is used to store commits between server runs. When the server runs, MySQL must run in the background. Script to create the database, createDatabase.sql, can be found in main/src/sql. Methods to insert and extract data from the database can be found in the database class. Tests of the methods can be found in the database-test file.
 
 ## Notification
 Notification via email using gmail as the SMTP server. The notification email is sent to the author of a commit.
 This is found in ContinuousIntegrationServer.java. The unit tests are found in ContinuousIntegrationServerTest.java.
+
+## Database
+A MySQL database is used to store commits between server runs. When the server runs, MySQL must run in the background. Script to create the database, createDatabase.sql, can be found in main/src/sql. Methods to insert and extract data from the database can be found in the database class. Tests of the methods can be found in the database-test file.
 
 ## Contributions
 
