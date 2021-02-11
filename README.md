@@ -19,6 +19,9 @@ These tests are found in ContinuousIntegrationServerTest.java.
 
 The database methods are tested by inserting data into the database and thereafter extracting it. Tests assert that the correct data was inserted and extracted, also that the number of rows in the database increased. These tests can be found in DatabaseTests.java.
 
+## build list URL
+http://344bb6ddffb9.ngrok.io/CI-DD2480/
+
 ## Notification
 Notification via email using gmail as the SMTP server. The notification email is sent to the author of a commit.
 This is found in ContinuousIntegrationServer.java. The unit tests are found in ContinuousIntegrationServerTest.java.
