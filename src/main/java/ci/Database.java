@@ -14,29 +14,36 @@ public class Database {
   public Database() {
 
     try {
-      // Create a connection with a database
-      conn = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/history", USER, PWD);
+        // Create a connection with a database
+        conn = DriverManager.getConnection(
+          "jdbc:mysql://localhost:3306/history", USER, PWD);
 
         // Create statement object
         this.stmt = conn.createStatement();
 
-        // Create a new table history if it not exists
+        // Create a new database history and a table builds if they do not exist
+        this.stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS history;");
         this.stmt.executeUpdate("USE history");
-
         this.stmt.executeUpdate("CREATE TABLE IF NOT EXISTS builds (commitHash VARCHAR(40) UNIQUE, commitDate INT(6), buildLog VARCHAR(6000));");
+
     } catch(SQLException exep) {
       exep.printStackTrace();
     }
   }
 
-  // Method to extract commit history, commit hash and commit date
+  /**
+  * Extracts commit history, commit id and commit date from database
+  * @return {ArrayList<String[3]>} commitList an ArrayList consisting of string arrays of length 3 with commit id, commit date and build log
+  */
   public ArrayList<String[]> getHistory() throws SQLException {
     ArrayList<String[]> commitList = new ArrayList<String[]>();
 
+    // Construct and execute query
     String getHistoryQuery = "SELECT commitHash, commitDate, buildLog FROM builds";
     ResultSet history = this.stmt.executeQuery(getHistoryQuery);
 
+    // Store commit id, commit date and build log from the resultset in an
+    // array and add each array to an ArrayList
     while(history.next()) {
       String[] commit = new String[3];
       commit[0] = history.getString("commitHash");
@@ -47,26 +54,40 @@ public class Database {
     return commitList;
   }
 
-  // Method to extract buildLog based on a commitHash
-  public String getBuildLog(String commitHash) throws SQLException {
+  /**
+  * Extracts build log from database
+  * @param {String} commitID
+  * @return {String} buildLog
+  */
+  public String getBuildLog(String commitId) throws SQLException {
     String result = "No build";
 
-    String getBuildLogQuery = "SELECT buildLog FROM builds WHERE commitHash = " + "'" + commitHash + "'";
+    // Construct and execute query
+    String getBuildLogQuery = "SELECT buildLog FROM builds WHERE commitHash = " + "'" + commitId + "'";
     ResultSet buildLog = this.stmt.executeQuery(getBuildLogQuery);
 
+    // Extract buildlog from the resultset
     while(buildLog.next()) {
       result = buildLog.getString("buildLog");
     }
     return result;
   }
 
-  // Method to insert a row into database
-  public void insertIntoDatabase(String commitHash, int commitDate, String buildLog) throws SQLException {
-    String insertData = "INSERT INTO builds VALUES (?, ?, ?)"; //+ commitHash + "', '" + commitDate + "', '" + buildLog + "' )";
+  /**
+  * Inserts commit id, commit date and build log into database
+  * @param {String} commitID
+  * @param {String} commitDate
+  * @param {String} buildLog
+  */
+  public void insertIntoDatabase(String commitId, int commitDate, String buildLog) throws SQLException {
+    // Create prepared statement
+    String insertData = "INSERT INTO builds VALUES (?, ?, ?)";
     PreparedStatement prepstmt = conn.prepareStatement(insertData);
-    prepstmt.setString(1, commitHash);
+    prepstmt.setString(1, commitId);
     prepstmt.setInt(2, commitDate);
     prepstmt.setString(3, buildLog);
+
+    //Execute query
     prepstmt.execute();
   }
 }

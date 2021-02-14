@@ -144,12 +144,19 @@ public class ContinuousIntegrationServer extends AbstractHandler
             return false;
         }
 
+    /**
+    * Adds commit id, commit date and build log to database
+    * @param {String} commit id of the commit
+    * @param {String} build log of the commit
+    */
     public void addToDatabase(String commitId, String buildLog) {
+      // Get today's date
       DateFormat dateFormat = new SimpleDateFormat("YYMMdd");
       Date dateDate = new Date();
       String strDate = dateFormat.format(dateDate);
       int date = Integer.parseInt(strDate);
 
+        // Insert data into database
         try {
           Database db = new Database();
           db.insertIntoDatabase(commitId, date, buildLog);
