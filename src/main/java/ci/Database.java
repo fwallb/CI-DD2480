@@ -33,7 +33,7 @@ public class Database {
 
   /**
   * Extracts commit history, commit id and commit date from database
-  * @return {ArrayList<String[3]>} commitList an ArrayList consisting of string arrays of length 3 with commit id, commit date and build log
+  * @return commitList an ArrayList consisting of string arrays of length 3 with commit id, commit date and build log
   */
   public ArrayList<String[]> getHistory() throws SQLException {
     ArrayList<String[]> commitList = new ArrayList<String[]>();
@@ -56,8 +56,8 @@ public class Database {
 
   /**
   * Extracts build log from database
-  * @param {String} commitID
-  * @return {String} buildLog
+  * @param commitId the commit id
+  * @return buildLog the build log
   */
   public String getBuildLog(String commitId) throws SQLException {
     String result = "No build";
@@ -75,9 +75,9 @@ public class Database {
 
   /**
   * Inserts commit id, commit date and build log into database
-  * @param {String} commitID
-  * @param {String} commitDate
-  * @param {String} buildLog
+  * @param commitId the commit id
+  * @param commitDate the commit date
+  * @param buildLog the build log
   */
   public void insertIntoDatabase(String commitId, int commitDate, String buildLog) throws SQLException {
     // Create prepared statement
