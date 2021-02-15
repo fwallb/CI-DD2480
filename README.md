@@ -29,6 +29,11 @@ Running:
 java -jar target/CI-DD2480-0.1.0.jar
 ```
 
+Generate javadoc:
+```
+./mvnw javadoc:javadoc
+```
+
 ## Testing:
 - Run maven tests:
 ```
