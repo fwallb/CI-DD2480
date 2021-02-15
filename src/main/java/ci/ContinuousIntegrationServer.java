@@ -37,8 +37,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
     /**
     * Clones the specified repo, checks out the specified commit, and runs
     * tests using maven.
-    * @param {String} repoUrl the URL of the repo that will be cloned
-    * @param {String} commitId the ID of the commit to checkout for that repo
+    * @param repoUrl the URL of the repo that will be cloned
+    * @param commitId the ID of the commit to checkout for that repo
     * @return The output from running maven, if all three steps completed
     * without an Exception occurring. Otherwise, an empty string.
     */
@@ -79,7 +79,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
     * Processes the webhook commit specified in the given JSON object.
-    * @param {JSONObject} requestBodyJson The body of the request, as a JSON object
+    * @param requestBodyJson The body of the request, as a JSON object
     * @return The output from cloning and testing the repo and commit specified
     * in that JSON object, if a commit is specified, otherwise an empty string.
     */
@@ -97,8 +97,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
     * Sends email to the author of a commit. Status depends on the results from processWebhookCommit().
-    * @param {JSONObject} requestBodyJson the JSONObject for this commit
-    * @param {String} webhookCommitResult contains output from the tests.
+    * @param requestBodyJson the JSONObject for this commit
+    * @param webhookCommitResult contains output from the tests.
     * @return True if an email was sent successfully, false otherwise
     */
     public static boolean sendGmail(JSONObject requestBodyJson, String webhookCommitResult) {
@@ -182,13 +182,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
      * Creates JSONObject and calls methods to start proccessing the webhook commit.
-     * Calls method to send notification email. 
+     * Calls method to send notification email.
      * Calls method to add commit results to database.
      *
-     * @param {String} target
-     * @param {Request} baseRequest
-     * @param {HttpServletRequest} request
-     * @param {HttpServletResponse} response
+     * @param target
+     * @param baseRequest
+     * @param request
+     * @param response
      * @throws IOException
      * @throws ServletException
      */
