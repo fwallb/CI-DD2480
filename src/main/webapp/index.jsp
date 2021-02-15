@@ -3,6 +3,7 @@
 
 <html>
     <%
+        // On page request, connect to database and get data
         Database db = new Database();
         ArrayList<String[]> list = db.getHistory();
     %>
@@ -72,12 +73,24 @@
         </main>
         <script>
             let expectedHash;
+            /**
+            * Removes "hide" class from log (removes display: none)
+            * @param {Node} log DOM node
+            */
             function openLog(log){
                 log.classList.remove('hide')
             }
+            /**
+            * Adds "hide" class to log (adds display: none)
+            * @param {Node} log DOM node
+            */
             function closeLog(log){
                 log.classList.add('hide')
             }
+            /**
+            * Handles Open/Close build log button clicks
+            * @param {Node} button DOM node
+            */
             function toggleBuildLog(button) {
                 if(button.innerHTML === 'View build log'){
                     openLog(button.parentNode.nextElementSibling)
@@ -94,7 +107,11 @@
                 }
             }
 
+            /**
+            * Handles hashchange-events
+            */
             function hashChangeHandler() {
+                // Check so that hashChangeHandler was not triggered by button click
                 if(window.location.hash === ('#' + expectedHash))
                     return;
                 expectedHash = window.location.hash;
