@@ -140,8 +140,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
     * Adds commit id, commit date and build log to database
-    * @param {String} commit id of the commit
-    * @param {String} build log of the commit
+    * @param commitId commit id of the commit
+    * @param buildLog build log of the commit
     */
     public void addToDatabase(String commitId, String buildLog) {
       // Get today's date
