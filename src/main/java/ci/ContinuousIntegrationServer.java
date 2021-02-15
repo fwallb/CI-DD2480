@@ -158,6 +158,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
     }
 
+    /**
+     * Creates JSONObject and calls methods to start proccessing the webhook commit.
+     * Calls method to send notification email. 
+     * Calls method to add commit results to database.
+     *
+     * @param {String} target
+     * @param {Request} baseRequest
+     * @param {HttpServletRequest} request
+     * @param {HttpServletResponse} response
+     * @throws IOException
+     * @throws ServletException
+     */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -187,7 +199,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.getWriter().println("CI job done");
     }
 
-    // used to start the CI server in command line
+    /*
+      Sets up and starts the CI server.
+     */
     public static void main(String[] args) throws Exception
     {
         Server server = new Server(8080);
